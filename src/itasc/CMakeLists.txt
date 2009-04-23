@@ -1,6 +1,4 @@
-#
 # $Id$
-#
 # ***** BEGIN GPL LICENSE BLOCK *****
 #
 # This program is free software; you can redistribute it and/or
@@ -17,31 +15,18 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
-# The Original Code is Copyright (C) 2001-2002 by NaN Holding BV.
+# The Original Code is Copyright (C) 2006, Blender Foundation
 # All rights reserved.
 #
 # The Original Code is: all of this file.
 #
-# Contributor(s): none yet.
+# Contributor(s): Jacques Beaurain.
 #
 # ***** END GPL LICENSE BLOCK *****
-# Bounces make to subdirectories. Also installs after succesful all target.
 
-SOURCEDIR = intern
+SET(INC ../../extern/Eigen2)
 
-# include nan_subdirs.mk
+FILE(GLOB SRC *.cpp kdl/*.cpp kdl/utilities/*.cpp)
 
-ALLDIRS = string ghost guardedalloc bmfont moto container memutil
-ALLDIRS += decimation iksolver itasc bsp SoundSystem opennl elbeem boolop
-
-all::
-	@for i in $(ALLDIRS); do \
-	    echo "====> $(MAKE) $@ in $(SOURCEDIR)/$$i" ;\
-	    $(MAKE) -C $$i install || exit 1; \
-	done
-clean test debug::
-	@for i in $(ALLDIRS); do \
-	    echo "====> $(MAKE) $@ in $(SOURCEDIR)/$$i" ;\
-	    $(MAKE) -C $$i $@ || exit 1; \
-	done
-
+BLENDERLIB(bf_ITASC "${SRC}" "${INC}")
+#, libtype=['blender'], priority = [10] )

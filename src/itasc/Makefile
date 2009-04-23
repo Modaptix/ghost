@@ -22,26 +22,32 @@
 #
 # The Original Code is: all of this file.
 #
-# Contributor(s): none yet.
+# Contributor(s): Hans Lambermont
 #
 # ***** END GPL LICENSE BLOCK *****
-# Bounces make to subdirectories. Also installs after succesful all target.
+# iksolver main makefile.
+#
 
-SOURCEDIR = intern
 
-# include nan_subdirs.mk
+LIBNAME = itasc
+DIR = $(OCGDIR)/intern/$(SOURCEDIR)
 
-ALLDIRS = string ghost guardedalloc bmfont moto container memutil
-ALLDIRS += decimation iksolver itasc bsp SoundSystem opennl elbeem boolop
+include nan_compile.mk
 
-all::
-	@for i in $(ALLDIRS); do \
-	    echo "====> $(MAKE) $@ in $(SOURCEDIR)/$$i" ;\
-	    $(MAKE) -C $$i install || exit 1; \
-	done
-clean test debug::
-	@for i in $(ALLDIRS); do \
-	    echo "====> $(MAKE) $@ in $(SOURCEDIR)/$$i" ;\
-	    $(MAKE) -C $$i $@ || exit 1; \
-	done
+CPPFLAGS += -I.
+CPPFLAGS += -I../../extern/Eigen2
 
+install: all debug
+	@[ -d $(NAN_ITASC) ] || mkdir $(NAN_ITASC)
+	@[ -d $(NAN_ITASC)/lib ] || mkdir $(NAN_ITASC)/lib
+	@[ -d $(NAN_ITASC)/lib/debug ] || mkdir $(NAN_ITASC)/lib/debug
+	@../tools/cpifdiff.sh $(DIR)/libitasc.a $(NAN_ITASC)/lib/
+	@../tools/cpifdiff.sh $(DIR)/debug/libitasc.a $(NAN_ITASC)/lib/debug/
+ifeq ($(OS),darwin)
+	ranlib $(NAN_ITASC)/lib/libitasc.a
+	ranlib $(NAN_ITASC)/lib/debug/libitasc.a
+endif
+##############################
+DIRS = kdl
+SOURCEDIR = intern/$(LIBNAME)
+include nan_subdirs.mk

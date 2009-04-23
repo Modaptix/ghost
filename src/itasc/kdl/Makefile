@@ -22,26 +22,21 @@
 #
 # The Original Code is: all of this file.
 #
-# Contributor(s): none yet.
+# Contributor(s): Hans Lambermont
 #
 # ***** END GPL LICENSE BLOCK *****
-# Bounces make to subdirectories. Also installs after succesful all target.
+# iksolver main makefile.
+#
 
-SOURCEDIR = intern
+LIBNAME = itasc
+DIR = $(OCGDIR)/intern/$(LIBNAME)
 
-# include nan_subdirs.mk
+include nan_compile.mk
 
-ALLDIRS = string ghost guardedalloc bmfont moto container memutil
-ALLDIRS += decimation iksolver itasc bsp SoundSystem opennl elbeem boolop
+CPPFLAGS += -I.
+CPPFLAGS += -I../../../extern/Eigen2
 
-all::
-	@for i in $(ALLDIRS); do \
-	    echo "====> $(MAKE) $@ in $(SOURCEDIR)/$$i" ;\
-	    $(MAKE) -C $$i install || exit 1; \
-	done
-clean test debug::
-	@for i in $(ALLDIRS); do \
-	    echo "====> $(MAKE) $@ in $(SOURCEDIR)/$$i" ;\
-	    $(MAKE) -C $$i $@ || exit 1; \
-	done
-
+##############################
+DIRS = utilities
+SOURCEDIR = intern/$(LIBNAME)/kdl
+include nan_subdirs.mk
