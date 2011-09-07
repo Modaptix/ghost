@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
  * This program is free software; you can redistribute it and/or
@@ -15,44 +17,38 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
- * Contributor(s): none yet.
+ * Contributor(s):
+ *   Mike Erwin
  *
  * ***** END GPL LICENSE BLOCK *****
  */
- 
 
-#ifndef _GHOST_EVENT_NDOF_H_
-#define _GHOST_EVENT_NDOF_H_
+#ifndef _GHOST_NDOFMANAGERCOCOA_H_
+#define _GHOST_NDOFMANAGERCOCOA_H_
 
-#include "GHOST_Event.h"
+#ifdef WITH_INPUT_NDOF
 
+#include "GHOST_NDOFManager.h"
 
-class GHOST_EventNDOFMotion : public GHOST_Event
-	{
-	protected:
-		GHOST_TEventNDOFMotionData m_axisData;
-	
-	public:
-		GHOST_EventNDOFMotion(GHOST_TUns64 time, GHOST_IWindow* window)
-			: GHOST_Event(time, GHOST_kEventNDOFMotion, window)
-			{
-			m_data = &m_axisData;
-			}
-	};
+// Event capture is handled within the NDOF manager on Macintosh,
+// so there's no need for SystemCocoa to look for them.
 
+class GHOST_NDOFManagerCocoa : public GHOST_NDOFManager
+{
+public:
+	GHOST_NDOFManagerCocoa(GHOST_System&);
 
-class GHOST_EventNDOFButton : public GHOST_Event
-	{
-	protected:
-		GHOST_TEventNDOFButtonData m_buttonData;
-	
-	public:
-		GHOST_EventNDOFButton(GHOST_TUns64 time, GHOST_IWindow* window)
-			: GHOST_Event(time, GHOST_kEventNDOFButton, window)
-			{
-			m_data = &m_buttonData;
-			}
-	};
+	~GHOST_NDOFManagerCocoa();
+
+	// whether multi-axis functionality is available (via the OS or driver)
+	// does not imply that a device is plugged in or being used
+	bool available();
+	bool oldDRV();
+
+private:
+	unsigned short m_clientID;
+};
 
 
-#endif // _GHOST_EVENT_NDOF_H_
+#endif // WITH_INPUT_NDOF
+#endif // #include guard
