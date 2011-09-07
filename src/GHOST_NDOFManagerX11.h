@@ -1,4 +1,6 @@
 /*
+ * $Id$
+ *
  * ***** BEGIN GPL LICENSE BLOCK *****
  *
  * This program is free software; you can redistribute it and/or
@@ -15,44 +17,34 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
- * Contributor(s): none yet.
+ * Contributor(s):
+ *   Mike Erwin
  *
  * ***** END GPL LICENSE BLOCK *****
  */
  
+#ifndef _GHOST_NDOFMANAGERX11_H_
+#define _GHOST_NDOFMANAGERX11_H_
 
-#ifndef _GHOST_EVENT_NDOF_H_
-#define _GHOST_EVENT_NDOF_H_
+#ifdef WITH_INPUT_NDOF
 
-#include "GHOST_Event.h"
+#include "GHOST_NDOFManager.h"
 
+/* Event capture is handled within the NDOF manager on Linux,
+ * so there's no need for SystemX11 to look for them. */
 
-class GHOST_EventNDOFMotion : public GHOST_Event
-	{
-	protected:
-		GHOST_TEventNDOFMotionData m_axisData;
-	
-	public:
-		GHOST_EventNDOFMotion(GHOST_TUns64 time, GHOST_IWindow* window)
-			: GHOST_Event(time, GHOST_kEventNDOFMotion, window)
-			{
-			m_data = &m_axisData;
-			}
-	};
+class GHOST_NDOFManagerX11 : public GHOST_NDOFManager
+{
+public:
+	GHOST_NDOFManagerX11(GHOST_System&);
+	~GHOST_NDOFManagerX11();
+	bool available();
+	bool processEvents();
 
+private:
+	bool m_available;
+};
 
-class GHOST_EventNDOFButton : public GHOST_Event
-	{
-	protected:
-		GHOST_TEventNDOFButtonData m_buttonData;
-	
-	public:
-		GHOST_EventNDOFButton(GHOST_TUns64 time, GHOST_IWindow* window)
-			: GHOST_Event(time, GHOST_kEventNDOFButton, window)
-			{
-			m_data = &m_buttonData;
-			}
-	};
+#endif /* WITH_INPUT_NDOF */
+#endif /* #include guard */
 
-
-#endif // _GHOST_EVENT_NDOF_H_
